@@ -15,7 +15,6 @@ class Config:
     JYGOODS_POSTS_PER_PAGE = 20
     JYGOODS_FOLLOWERS_PER_PAGE = 10
     JYGOODS_COMMENTS_PER_PAGE = 10
-    UPLOAD_FOLDER = os.path.join(basedir + 'upload/')
 
 
     @staticmethod
