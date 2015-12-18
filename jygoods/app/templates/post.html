@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
+{% block title %}
+    文章
+{% endblock %}
+
+{% block page_content %}
+    {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% include '_posts.html' %}
+    {% if current_user.can(Permission.COMMENT) %}
+        <h4 id="comments">评论列表</h4>
+        <div class="comment-form">
+            {{ wtf.quick_form(form) }}
+        </div>
+    {% endif %}
+    {% include '_comments.html' %}
+    {% if pagination %}
+        <div class="pagination">
+            {{ macros.pagination_widget(pagination, 'main.post', fragment='#comments', id=posts[0].id) }}
+        </div>
+    {% endif %}
+{% endblock %}

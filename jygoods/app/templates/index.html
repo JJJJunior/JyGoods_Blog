@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
+{% block title %}
+    Main page
+{% endblock %}
+
+{% block page_content %}
+    {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    <div class="page-header">
+        <h3>
+            {% if not current_user.is_authenticated %}欢迎访问!{% endif %}</h3>
+
+        <div>
+            {% if current_user.can(Permission.WRITE_ARTICLES) %}
+                <form action method="post" class="form" role="form">
+                    {{ form.csrf_token }}
+                    {{ form.body(class="form-control flask-pagedown-input", style="margin: 0px -5px 0px 0px; width: 1144px; height: 100px;") }}
+                    {{ form.submit(class="btn btn-default") }}
+                </form>
+            {% endif %}
+        </div>
+    </div>
+    <div class="post-tabs">
+        <ul class="nav nav-tabs">
+            <li{% if not show_followed %} class="active"{% endif %}><a href="{{ url_for('.show_all') }}">全部的</a></li>
+            {% if current_user.is_authenticated %}
+                <li{% if show_followed %} class="active"{% endif %}><a
+                        href="{{ url_for('.show_followed') }}">我关注的</a></li>
+            {% endif %}
+        </ul>
+        {% include '_posts.html' %}
+    </div>
+    <div class="pagination">
+        {{ macros.pagination_widget(pagination, 'main.index') }}
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    {{ pagedown.include_pagedown() }}
+{% endblock %}
